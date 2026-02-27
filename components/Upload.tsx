@@ -81,6 +81,7 @@ const Upload = ({ onComplete }: UploadProps) => {
     setIsDragging(false);
   };
 
+  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024;
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
@@ -90,36 +91,25 @@ const Upload = ({ onComplete }: UploadProps) => {
     const droppedFile = e.dataTransfer.files[0];
     const allowedTypes = ["image/jpeg", "image/png"];
     if (droppedFile && allowedTypes.includes(droppedFile.type)) {
-      processFile(droppedFile);
-    }
-  };
 
-  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isSignedIn) return;
+      if (
+        droppedFile &&
+        allowedTypes.includes(droppedFile.type) &&
+        droppedFile.size <= MAX_FILE_SIZE_BYTES) { processFile(droppedFile); }
+    }; const handleChange = (e:
+      React.ChangeEvent<HTMLInputElement>) => {
+      if (!isSignedIn) return;
 
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile && selectedFile.size <= MAX_FILE_SIZE_BYTES) {
-      processFile(selectedFile);
-    }
-  };
-  return (
-    <div className="upload">
+      const selectedFile = e.target.files?.[0];
+      if (selectedFile && selectedFile.size <= MAX_FILE_SIZE_BYTES) { processFile(selectedFile); }
+    }; return (<div
+      className="upload">
       {!file ? (
-        <div
-          className={`dropzone ${isDragging ? "is-dragging" : ""}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <input
-            type="file"
-            className="drop-input"
-            accept=".jpg,.jpeg,.png"
-            disabled={!isSignedIn}
-            onChange={handleChange}
-          />
+        <div className={`dropzone ${isDragging ? "is-dragging" : ""}`} onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave} onDrop={handleDrop}>
+          <input type="file" className="drop-input" accept=".jpg,.jpeg,.png" disabled={!isSignedIn}
+            onChange={handleChange} />
 
           <div className="drop-content">
             <div className="drop-icon">
@@ -150,15 +140,13 @@ const Upload = ({ onComplete }: UploadProps) => {
               <div className="bar" style={{ width: `${progress}%` }} />
 
               <p className="status-text">
-                {progress < 100
-                  ? "Analyzing Floor Plan..."
-                  : "Redirecting..."}{" "}
+                {progress < 100 ? "Analyzing Floor Plan..." : "Redirecting..."}{" "}
               </p>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
-};
-export default Upload;
+    );
+  };
+  export default Upload;
