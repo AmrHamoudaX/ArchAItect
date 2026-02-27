@@ -94,15 +94,16 @@ const Upload = ({ onComplete }: UploadProps) => {
     }
   };
 
+  const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!isSignedIn) return;
 
     const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
+    if (selectedFile && selectedFile.size <= MAX_FILE_SIZE_BYTES) {
       processFile(selectedFile);
     }
   };
-
   return (
     <div className="upload">
       {!file ? (
@@ -115,7 +116,7 @@ const Upload = ({ onComplete }: UploadProps) => {
           <input
             type="file"
             className="drop-input"
-            accept=".jpg,.jpeg,.png,.webp"
+            accept=".jpg,.jpeg,.png"
             disabled={!isSignedIn}
             onChange={handleChange}
           />
